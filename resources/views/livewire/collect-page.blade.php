@@ -1,11 +1,11 @@
-<x-filament-panels::page.simple>
-    @if ($this->recentlySuccessful)
-        {{-- <x-alert
-            icon="heroicon-s-check-circle"
-            color="success"
-            :title="__('app.request.sent.title')"
-            :message="__('app.request.sent.message')" /> --}}
-    @else
+<x-filament-panels::page.simple >
+    @if($this->recentlySuccessful)
+        <p class="text-lg font-semibold">
+            Declarația a fost încărcată cu succes. Îți mulțumim pentru contribuția ta. Nu uita să încarci toate declarațiile aferente persoanei care ți-a fost alocată din toți anii pentru care acestea sunt disponibile pe site-ul ANI. Dacă ai mai mult timp la dispoziție, ia legătura cu echipa pentru a ți se aloca o nouă persoană pentru care să operezi căutarea. Mulțumim.
+        </p>
+
+        {{$this->refreshAction}}
+        @else
         <x-filament-panels::form wire:submit="handle">
             {{ $this->form }}
 

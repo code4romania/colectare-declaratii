@@ -19,6 +19,7 @@
 
     <x-site.skip-to-content />
 
+
     <div class="flex flex-1">
         {{ $slot }}
     </div>

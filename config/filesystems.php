@@ -49,6 +49,12 @@ return [
             'report' => false,
         ],
 
+        'seed-data' => [
+            'driver' => 'local',
+            'root' => database_path('data'),
+            'read-only' => true,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

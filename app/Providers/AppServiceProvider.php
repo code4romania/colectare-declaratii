@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Filament\Facades\Filament;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Filament::getCurrentPanel()->darkMode(false);
+        Filament::getCurrentPanel()
+            ->brandLogo(fn () => view('filament.brand'))
+            ->brandLogoHeight('3rem');
     }
 }

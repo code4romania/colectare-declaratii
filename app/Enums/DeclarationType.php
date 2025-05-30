@@ -14,13 +14,13 @@ enum DeclarationType: string implements HasLabel
     use Comparable;
 
     case ASSETS = 'assets';
-    case INTERESTS = 'INTERESTS';
+    case INTERESTS = 'interests';
 
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::ASSETS => __('app.area.urban'),
-            self::INTERESTS => __('app.area.rural'),
+            self::ASSETS => __('app.declaration_types.assets'),
+            self::INTERESTS => __('app.declaration_types.interests'),
         };
     }
 }
