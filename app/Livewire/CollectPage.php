@@ -8,6 +8,8 @@ use App\Enums\DeclarationType;
 use App\Models\County;
 use App\Models\Declaration;
 use App\Models\Locality;
+use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
+use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -16,6 +18,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\SimplePage;
 use Filament\Support\Enums\MaxWidth;
@@ -25,8 +28,7 @@ use Illuminate\Support\HtmlString;
 class CollectPage extends SimplePage
 {
     use InteractsWithFormActions;
-
-    // protected static string $layout = 'components.layout.public';
+    use WithRateLimiting;
 
     protected static string $view = 'livewire.collect-page';
 
@@ -53,50 +55,60 @@ class CollectPage extends SimplePage
     {
         return $form
             ->statePath('data')
+            ->columns()
             ->schema([
-                TextInput::make('official_name')
+                TextInput::make('full_name')
                     ->hint(__('app.hints.full_name'))
                     ->label(__('app.fields.full_name'))
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->required()
+                    ->columnSpanFull(),
 
                 TextInput::make('institution')
                     ->label(__('app.fields.institution'))
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->required(),
 
                 TextInput::make('position')
                     ->label(__('app.fields.position'))
                     ->autocomplete()
                     ->datalist(['Director', 'Administrator', 'Manager'])
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->required(),
 
                 Select::make('county_id')
                     ->label(__('app.fields.county'))
                     ->options(County::pluck('name', 'id'))
                     ->searchable()
-                    ->live(),
+                    ->lazy()
+                    ->required(),
 
                 Select::make('locality_id')
                     ->label(__('app.fields.locality'))
                     ->disabled(fn (Get $get) => blank($get('county_id')))
                     ->options(fn (Get $get) => Locality::where('county_id', $get('county_id'))->pluck('name', 'id'))
-                    ->searchable(),
-
-                DatePicker::make('date')
-                    ->default(now())
-                    ->label(__('app.fields.fill_date')),
+                    ->searchable()
+                    ->required(),
 
                 Radio::make('type')
                     ->label(__('app.fields.type'))
                     ->options(DeclarationType::options())
                     ->inline()
+                    ->inlineLabel(false)
                     ->required(),
 
-                FileUpload::make('file')
+                DatePicker::make('date')
+                    ->label(__('app.fields.fill_date'))
+                    ->required(),
+
+                FileUpload::make('filename')
+                    ->label(__('app.fields.file'))
                     ->hint(new HtmlString(__('app.hints.file')))
                     ->acceptedFileTypes(['application/pdf'])
-                    ->disk('s3')
+                    ->storeFileNamesIn('original_filename')
+                    ->disk(config('filesystems.default'))
                     ->required()
-                    ->preserveFilenames(),
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -112,7 +124,20 @@ class CollectPage extends SimplePage
 
     public function handle(): void
     {
-        $this->form->validate();
+        try {
+            $this->rateLimit(1);
+        } catch (TooManyRequestsException $exception) {
+            Notification::make()
+                ->title(__('filament-panels::pages/auth/password-reset/request-password-reset.notifications.throttled.title'))
+                ->body(__('filament-panels::pages/auth/password-reset/request-password-reset.notifications.throttled.body', [
+                    'seconds' => $exception->secondsUntilAvailable,
+                    'minutes' => ceil($exception->secondsUntilAvailable / 60),
+                ]))
+                ->danger()
+                ->send();
+
+            return;
+        }
 
         $data = $this->form->getState();
 

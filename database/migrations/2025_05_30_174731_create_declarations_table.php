@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Official;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,37 +17,28 @@ return new class extends Migration
             $table->id();
 
             $table->smallInteger('county_id')
-                ->unsigned()
-                ->nullable();
+                ->unsigned();
 
             $table->foreign('county_id')
                 ->references('id')
                 ->on('counties');
 
             $table->mediumInteger('locality_id')
-                ->unsigned()
-                ->nullable();
+                ->unsigned();
 
             $table->foreign('locality_id')
                 ->references('id')
                 ->on('localities');
 
-            $table->foreignIdFor(Official::class)->nullable()->constrained();
             $table->string('type');
-            $table->string('official_name')->nullable();
-            $table->string('institution')->nullable();
-            $table->string('position')->nullable();
-            $table->string('file');
+            $table->string('full_name');
+            $table->string('institution');
+            $table->string('position');
+            $table->string('filename');
+            $table->string('original_filename');
+
             $table->ipAddress();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('declarations');
     }
 };

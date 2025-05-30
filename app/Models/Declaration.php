@@ -15,12 +15,12 @@ class Declaration extends Model
     protected $fillable = [
         'county_id',
         'locality_id',
-        'official_id',
         'type',
-        'official_name',
+        'full_name',
         'institution',
         'position',
-        'file',
+        'filename',
+        'original_filename',
         'ip_address',
     ];
 
