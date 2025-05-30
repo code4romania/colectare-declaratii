@@ -58,7 +58,7 @@ class DeclarationResource extends Resource
                     ->maxLength(255),
 
                 FileUpload::make('file')
-                    ->disk('s3')
+                    ->disk(config('filesystems.default'))
                     ->label(__('app.fields.file'))
                     ->acceptedFileTypes(['application/pdf'])
                     ->required(),
