@@ -125,7 +125,7 @@ class CollectPage extends SimplePage
     public function handle(): void
     {
         try {
-            $this->rateLimit(1);
+            $this->rateLimit(10);
         } catch (TooManyRequestsException $exception) {
             Notification::make()
                 ->title(__('filament-panels::pages/auth/password-reset/request-password-reset.notifications.throttled.title'))
