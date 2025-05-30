@@ -48,7 +48,7 @@ class CollectPage extends SimplePage
 
     public function getHeading(): string|Htmlable
     {
-        return 'Colectează declarația de avere sau interese';
+        return 'Colectează declarații de avere și interese';
     }
 
     public function form(Form $form): Form
