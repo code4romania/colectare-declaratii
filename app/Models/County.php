@@ -35,6 +35,11 @@ class County extends Model
         return $this->hasMany(Locality::class);
     }
 
+    public function declarations(): HasMany
+    {
+        return $this->hasMany(Declaration::class, 'county_id');
+    }
+
     public function toSearchableArray(): array
     {
         return [

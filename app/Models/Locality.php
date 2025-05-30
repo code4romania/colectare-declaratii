@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Locality extends Model
 {
@@ -30,6 +31,11 @@ class Locality extends Model
         return $this->belongsTo(static::class, 'parent_id');
     }
 
+    public function declarations(): HasMany
+    {
+        return $this->hasMany(Declaration::class, 'locality_id');
+    }
+
     protected function getNameWithCountyAttribute(): string
     {
         return "{$this->name}, {$this->county->name}";
@@ -50,11 +56,11 @@ class Locality extends Model
     public function toSearchableArray(): array
     {
         return [
-            'id' => (string) $this->id,
+            'id' => (string)$this->id,
             'name' => $this->name,
             'county' => $this->county->name,
-            'county_id' => (string) $this->county_id,
-            'parent_id' => (string) $this->parent_id ?: null,
+            'county_id' => (string)$this->county_id,
+            'parent_id' => (string)$this->parent_id ?: null,
         ];
     }
 

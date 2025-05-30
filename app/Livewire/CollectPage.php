@@ -96,7 +96,6 @@ class CollectPage extends SimplePage
                     ->acceptedFileTypes(['application/pdf'])
                     ->disk('s3')
                     ->required()
-                    ->saveUploadedFileUsing()
                     ->preserveFilenames(),
             ]);
     }
@@ -139,5 +138,4 @@ class CollectPage extends SimplePage
 
             ->action(fn () => $this->refresh());
     }
-
 }
