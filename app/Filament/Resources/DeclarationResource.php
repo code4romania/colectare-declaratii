@@ -25,6 +25,16 @@ class DeclarationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getModelLabel(): string
+    {
+        return __('app.declaration.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('app.declaration.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -64,26 +74,34 @@ class DeclarationResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('county.name')
+                    ->label(__('app.fields.county'))
                     ->sortable(),
                 TextColumn::make('locality.name')
+                    ->label(__('app.fields.locality'))
                     ->sortable(),
 
                 TextColumn::make('type')
+                    ->label(__('app.fields.type'))
                     ->badge()
                     ->searchable(),
 
                 TextColumn::make('full_name')
+                    ->label(__('app.fields.full_name'))
+                    ->wrap()
                     ->searchable(),
 
                 TextColumn::make('institution')
+                    ->label(__('app.fields.institution'))
                     ->wrap()
                     ->searchable(),
 
                 TextColumn::make('position')
+                    ->label(__('app.fields.position'))
                     ->wrap()
                     ->searchable(),
 
                 TextColumn::make('ip_address')
+                    ->label(__('app.fields.ip_address'))
                     ->searchable(),
 
                 TextColumn::make('created_at')
@@ -101,19 +119,20 @@ class DeclarationResource extends Resource
                     ->label(__('app.fields.type')),
 
                 SelectFilter::make('county_id')
-                    ->relationship('county', 'name', modifyQueryUsing: fn(Builder $query) => $query->whereHas('declartions'))
+                    ->relationship('county', 'name', modifyQueryUsing: fn (Builder $query) => $query->whereHas('declarations'))
                     ->searchable()
                     ->multiple()
                     ->preload()
                     ->label(__('app.fields.county')),
 
                 SelectFilter::make('locality_id')
-                    ->relationship('locality', 'name', modifyQueryUsing: fn(Builder $query) => $query->whereHas('declartions'))
+                    ->relationship('locality', 'name', modifyQueryUsing: fn (Builder $query) => $query->whereHas('declarations'))
                     ->searchable()
                     ->multiple()
                     ->label(__('app.fields.locality')),
 
             ])
+            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
