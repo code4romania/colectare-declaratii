@@ -12,6 +12,7 @@ return[
         'fill_date' => 'Data completării',
         'type' => 'Tip',
         'file' => 'Fișier',
+        'ip_address' => 'Adresa IP',
 
     ],
 
@@ -27,5 +28,10 @@ return[
 
     'submit' => 'Trimite',
     'refresh' => 'Incarcă o nouă declarație',
+
+    'declaration' => [
+        'singular' => 'Declarație',
+        'plural' => 'Declarații',
+    ],
 
 ];
