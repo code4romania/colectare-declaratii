@@ -46,7 +46,7 @@ class CollectPage extends SimplePage
         $this->form->fill();
     }
 
-    public function getHeading(): string|Htmlable
+    public function getTitle(): string|Htmlable
     {
         return 'Colectează declarații de avere și interese';
     }
@@ -106,7 +106,7 @@ class CollectPage extends SimplePage
                     ->hint(new HtmlString(__('app.hints.file')))
                     ->acceptedFileTypes(['application/pdf'])
                     ->storeFileNamesIn('original_filename')
-                    ->disk(config('filesystems.default'))
+                    // ->disk(config('filesystems.default'))
                     ->required()
                     ->columnSpanFull(),
             ]);
