@@ -12,16 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('declarations', function (Blueprint $table) {
-            $table->timestamp('started_processing_at')->nullable()->after('ip_address');
-            $table->timestamp('finished_processing_at')->nullable()->after('started_processing_at');
-
+            $table->timestamp('started_processing_at')->nullable();
+            $table->timestamp('finished_processing_at')->nullable();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
     }
 };
