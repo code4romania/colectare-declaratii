@@ -10,7 +10,7 @@
         "andreiio/blade-remix-icon": "^3.6",
         "awcodes/filament-table-repeater": "^3.1",
         "filament/filament": "^3.3",
-        "laravel/framework": "^12.16",
+        "laravel/framework": "^12.32",
         "laravel/tinker": "^2.10",
         "league/flysystem-aws-s3-v3": "^3.29",
         "league/flysystem-read-only": "^3.28",
