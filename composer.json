@@ -15,7 +15,7 @@
         "league/flysystem-aws-s3-v3": "^3.29",
         "league/flysystem-read-only": "^3.28",
         "livewire/livewire": "^3.6",
-        "sentry/sentry-laravel": "^4.13"
+        "sentry/sentry-laravel": "^4.18"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",
