@@ -1,8 +1,17 @@
-FROM code4romania/php:8.2 AS vendor
+FROM code4romania/php:8.4 AS vendor
 
-WORKDIR /var/www
+# Switch to root so we can do root things
+USER root
 
-COPY --chown=www-data:www-data . /var/www
+# Install additional PHP extensions
+RUN set -ex; \
+    install-php-extensions \
+    sockets
+
+# Drop back to our unprivileged user
+USER www-data
+
+COPY --chown=www-data:www-data . /var/www/html
 
 RUN set -ex; \
     composer install \
@@ -12,7 +21,7 @@ RUN set -ex; \
     --no-dev \
     --prefer-dist
 
-FROM node:22-alpine AS assets
+FROM node:24-alpine AS assets
 
 WORKDIR /build
 
@@ -26,7 +35,7 @@ COPY \
 RUN set -ex; \
     npm ci --no-audit --ignore-scripts
 
-COPY --from=vendor /var/www /build
+COPY --from=vendor /var/www/html /build
 
 RUN set -ex; \
     npm run build
@@ -36,11 +45,10 @@ FROM vendor
 ARG VERSION
 ARG REVISION
 
-RUN echo "$VERSION (${REVISION:0:7})" > /var/www/.version
+RUN echo "$VERSION (${REVISION:0:7})" > /var/www/html/.version
 
-COPY docker/s6-rc.d /etc/s6-overlay/s6-rc.d
-COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/public/build
+COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/html/public/build
 
-ENV SENTRY_SAMPLE_RATE=1.0
+ENV QUEUE_ENABLED=true
 
-EXPOSE 80
+ENV PHP_PM_MAX_CHILDREN=64
